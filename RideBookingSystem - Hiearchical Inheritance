@@ -1,0 +1,110 @@
+package com.example.demo;
+
+import java.util.Scanner;
+
+//Super Class
+class Vehicle{
+	//Private data members to restrict direct access
+	private String vehicleId;
+	private String type;
+	private double farePerKm;
+	private boolean availability;
+	
+	//Constructor
+	Vehicle(String vehicleId,String type,double farePerKm,boolean availability){
+		this.vehicleId=vehicleId;
+		this.type=type;
+		this.farePerKm=farePerKm;
+		this.availability=availability;
+	}
+	
+	
+	public void bookRide() {
+		if(availability) {
+			System.out.println(type+" "+vehicleId+" booked successfully.");
+			availability=false;
+		}
+		else {
+			System.out.println(type+" "+vehicleId+" is not available.");
+		}
+	}
+	
+	public double calculateFare(double distance) {
+		return farePerKm * distance; 
+	}
+}
+
+//Sub Class
+class Car extends Vehicle{
+	private boolean hasAC;
+	private int seatingCapacity;
+	
+	//Constructor
+	Car(String vehicleId, String type, double farePerKm, boolean availability,boolean hasAC,int seatingCapacity) {
+		super(vehicleId, type, farePerKm, availability);
+		this.hasAC=hasAC;
+		this.seatingCapacity=seatingCapacity;
+	}
+	
+	@Override
+	public double calculateFare(double distance) {
+		double baseFare=super.calculateFare(distance);
+		return hasAC ? baseFare + 20 : baseFare;
+		
+	}
+}
+//Sub Class
+class Bike extends Vehicle{
+	//Constructor
+	Bike(String vehicleId,String type,double farePerKm,boolean availability){
+		super(vehicleId,type,farePerKm,availability);
+	}
+	
+	@Override
+	public double calculateFare(double distance) {
+		return super.calculateFare(distance)*0.9;
+	}
+}
+
+//Sub Class
+class Auto extends Vehicle{
+	//Constructor
+	Auto(String vehicleId,String type,double farePerKm,boolean availability){
+		super(vehicleId,type,farePerKm,availability);
+	}
+	
+	@Override
+	public double calculateFare(double distance) {
+		return super.calculateFare(distance);
+	}
+}
+
+
+public class RideBookingSystem {
+   public static void main(String[] args) {
+	   Scanner scanner=new Scanner(System.in);
+	   Car car=new Car("C101","Car",15.0,true,true,4);
+	   Bike bike=new Bike("B201","Bike",8.0,true);
+	   Auto auto=new Auto("A302","Auto",10.0,true);
+	   System.out.println("Enter the Vehicle to Book: ");
+	   String s=scanner.nextLine();
+	   System.out.println("Enter the distance (km): ");
+	   double distance=scanner.nextDouble();
+	   
+	   if(s.equals("Car")) {
+		   System.out.println("Booking a Car");
+		   car.bookRide();
+		   System.out.println("Fare: Rs."+car.calculateFare(distance));
+	    }
+	   else if(s.equals("Bike")) {
+		   System.out.println("Booking a Bike");
+		   bike.bookRide();
+		   System.out.println("Fare: Rs."+bike.calculateFare(distance)+" "+"(10% discount applied!)");
+	   }
+	   else if(s.equals("Auto")) {
+		   System.out.println("Booking a Auto");
+		   auto.bookRide();
+		   System.out.println("Fare: Rs."+auto.calculateFare(distance));
+	   }
+   }
+}
